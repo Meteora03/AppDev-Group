@@ -1,3 +1,0 @@
-# AppDev-Group
-
-sample repo
