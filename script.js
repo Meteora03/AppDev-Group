@@ -1,9 +1,9 @@
 // Encrypting Text
 async function encrypt(text){
-    const msgUint8 = new TextEncoder().encode(text);
-    const hashBuffer = await crypto.subtle.digest("SHA-256", msgUint8);
-    const hashArray = Array.from(new Uint8Array(hashBuffer))
-    return hashArray.map(b => b.toString(16).padStart(2,"0")).join("");
+    const msgUint8 = new TextEncoder().encode(text); // Convert text to bytes
+    const hashBuffer = await crypto.subtle.digest("SHA-256", msgUint8); // Hash bytes
+    const hashArray = Array.from(new Uint8Array(hashBuffer)) // Convert buffer to array
+    return hashArray.map(b => b.toString(16).padStart(2,"0")).join(""); // Convert to hex string
 }
 
 // Register
