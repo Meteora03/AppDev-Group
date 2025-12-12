@@ -1,3 +1,5 @@
+/*
+
 const aiBox = document.getElementById("aiBox");
 
 // Default message before server responds
@@ -41,3 +43,5 @@ document.getElementById("restart").addEventListener("click", async () => {
         aiBox.value = "Server not running or network error.";
     }
 });
+
+*/

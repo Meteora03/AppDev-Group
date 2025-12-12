@@ -1,4 +1,4 @@
-require("dotenv").config();
+/*require("dotenv").config();
 console.log("API Key loaded:", process.env.GEMINI_API_KEY);
 
 const express = require("express");
@@ -44,3 +44,4 @@ app.post("/summarize", async (req, res) => {
 });
 
 app.listen(3000, () => console.log("Server running on http://localhost:3000"));
+*/
