@@ -1,15 +1,20 @@
-// Pomodoro.js
-
 let timer;
-let timeLeft = 1500; // default 25 mins
+let timeLeft;
+let cycleCount = 0;
+let isBreak = false;
 
 const timerDisplay = document.getElementById("timer");
 
 const MODES = {
-    pomodoro: 1500,       // 25:00
-    long: 900,             // 15:00
-    short: 300           // 5:00
+    pomodoro: 1500, // 25 mins
+    long: 900,      // 15 mins
+    short: 8      // 8 seconds (for testing)
 };
+
+const BREAK_TIME = 300; // 5:00 break
+const MAX_CYCLES = 4;   // 4 cycles per mode
+
+let activeMode = "pomodoro"; // default mode
 
 // Change mode buttons
 document.querySelectorAll(".mode_btn").forEach(btn => {
@@ -17,10 +22,8 @@ document.querySelectorAll(".mode_btn").forEach(btn => {
         document.querySelector(".mode_btn.active").classList.remove("active");
         btn.classList.add("active");
 
-        const mode = btn.dataset.mode;
-        timeLeft = MODES[mode];
-        updateTimer();
-        clearInterval(timer);
+        activeMode = btn.dataset.mode;
+        resetTimer();
     });
 });
 
@@ -37,22 +40,51 @@ document.getElementById("pauseBtn").addEventListener("click", () => {
 
 // Restart
 document.getElementById("restartBtn").addEventListener("click", () => {
-    const activeMode = document.querySelector(".mode_btn.active").dataset.mode;
-    timeLeft = MODES[activeMode];
-    updateTimer();
-    clearInterval(timer);
+    resetTimer();
 });
 
-// countdown logic
+// Reset timer to initial state
+function resetTimer() {
+    clearInterval(timer);
+    timeLeft = MODES[activeMode];
+    isBreak = false;
+    cycleCount = 0;
+    updateTimer();
+}
+
+// Countdown logic
 function countdown() {
     if (timeLeft <= 0) {
         clearInterval(timer);
+
+        if (!isBreak) {
+            // Finished work session → start break
+            timeLeft = BREAK_TIME;
+            isBreak = true;
+            updateTimer();
+            timer = setInterval(countdown, 1000);
+        } else {
+            // Finished break
+            cycleCount++;
+            if (cycleCount < MAX_CYCLES) {
+                // Start next work session
+                timeLeft = MODES[activeMode];
+                isBreak = false;
+                updateTimer();
+                timer = setInterval(countdown, 1000);
+            } else {
+                // Finished 4 cycles → stop
+                alert("Pomodoro complete!");
+            }
+        }
         return;
     }
+
     timeLeft--;
     updateTimer();
 }
 
+// Update display
 function updateTimer() {
     let minutes = Math.floor(timeLeft / 60);
     let seconds = timeLeft % 60;
